@@ -47,12 +47,13 @@ public class BtDevicesActivity extends Activity {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 
+
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 try {
                     //device.getClass().getMethod("setPairingConfirmation", boolean.class).invoke(device, true);
                     //device.getClass().getMethod("cancelPairingUserInput", boolean.class).invoke(device);
                 } catch (Exception e) {
-                    Log.i("Log", "Inside the exception: ");
+                    Log.i("Log", " - Inside  the  exception: ");
                     e.printStackTrace();
                 }
 
