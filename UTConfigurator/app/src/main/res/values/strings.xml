@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Configurateur UT</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="button_title">Mettre à jour l\'UT</string>
+    <string name="button_find">Recherche bluetooth</string>
+    <string name="ut_name">Nom UT</string>
+    <string name="ut_location">Localisation</string>
+    <string name="bt_list">Scan bluetooth</string>
+    <string name="refresh">Actualiser</string>
+</resources>
