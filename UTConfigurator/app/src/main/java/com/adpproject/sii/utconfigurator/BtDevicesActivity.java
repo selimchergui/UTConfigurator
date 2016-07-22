@@ -34,6 +34,8 @@ public class BtDevicesActivity extends Activity {
     ArrayAdapter<String> adapter, detectedAdapter;
     BluetoothDevice bdDevice;
     BluetoothClass bdClass;
+    Intent theIntent;
+
     ArrayList<BluetoothDevice> arrayListPairedBluetoothDevices;
     //    ListItemClickedonPaired listItemClickedonPaired;
     BluetoothAdapter bluetoothAdapter = null;
@@ -94,6 +96,8 @@ public class BtDevicesActivity extends Activity {
         clicked = new ButtonClicked();
         handleSearch = new HandleSearch();
         arrayListPairedBluetoothDevices = new ArrayList<BluetoothDevice>();
+
+        theIntent = new Intent();
         /*
          * the above declaration is just for getting the paired bluetooth devices;
          * this helps in the removing the bond between paired devices.
@@ -250,16 +254,17 @@ public class BtDevicesActivity extends Activity {
             // connect(). but for the safer side we must usethe threading object.
             //
             //callThread();
-//               connect(bdDevice);
+            connect(bdDevice);
             Boolean isBonded = false;
             String s = bdDevice.getName();
-            Intent i = getParentActivityIntent();
-//               Intent i=getParent().getIntent();
-            i.putExtra("utName", s);
+            //Intent i = getParentActivityIntent();
+            theIntent.putExtra("utName", s);
             //  i.putExtra("location","location");
 
             //setResult(Activity.RESULT_OK, new Intent().putExtra("utName", s));
             //myReceiver.setResultExtras("utName", s);
+            setResult(RESULT_OK, theIntent);
+
             finish();
 
 //               try {

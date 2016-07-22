@@ -66,8 +66,7 @@ public class MainFragment extends Fragment {
                 // Activity btDevicesActivity=new BtDevicesActivity();
                 Intent btActivity = new Intent(getActivity(), BtDevicesActivity.class);
                 //btDevicesActivity.setArguments(getActivity().getIntent().getExtras());
-
-                startActivity(btActivity);
+                startActivityForResult(btActivity, 113);
 
 
             }
@@ -106,9 +105,7 @@ public class MainFragment extends Fragment {
     public void onResume() {
         super.onResume();
         try {
-            String name = (String) getActivity().getIntent().getExtras().get("utName");
-            utNameText.setText(name);
-            locationText.setText("< location >");
+
         } catch (NullPointerException e) {
         }
 
@@ -135,7 +132,10 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            Log.i("selim", data.getStringExtra("utName"));
+            Log.d("selim", data.getStringExtra("utName"));
+            String name = data.getStringExtra("utName");
+            utNameText.setText(name);
+            locationText.setText("< location >");
             // do something with B's return values
         }
     }

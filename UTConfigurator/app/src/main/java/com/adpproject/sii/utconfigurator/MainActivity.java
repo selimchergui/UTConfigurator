@@ -1,7 +1,6 @@
 package com.adpproject.sii.utconfigurator;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
-import android.widget.Button;
 
 
 public class MainActivity extends Activity {
@@ -60,6 +57,14 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            Log.d("selim", data.getStringExtra("utName"));
+            // do something with B's return values
+        }
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -75,6 +80,5 @@ public class MainActivity extends Activity {
             return rootView;
         }
     }
-
 
 }
