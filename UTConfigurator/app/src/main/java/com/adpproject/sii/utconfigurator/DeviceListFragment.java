@@ -124,7 +124,7 @@ public class DeviceListFragment extends Fragment {
             // TODO Auto-generated method stub
             bdDevice = arrayListBluetoothDevices.get(position);
             //bdClass = arrayListBluetoothDevices.get(position);
-            Log.i("Log", "The dvice : " + bdDevice.toString());
+            Log.i("Log", "The device : " + bdDevice.toString());
             /*
              * here below we can do pairing without calling the callthread(), we can directly call the
              * connect(). but for the safer side we must usethe threading object.

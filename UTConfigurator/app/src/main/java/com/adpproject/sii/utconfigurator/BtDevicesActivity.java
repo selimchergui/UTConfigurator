@@ -209,25 +209,7 @@ public class BtDevicesActivity extends Activity {
         bluetoothAdapter.startDiscovery();
     }
 
-    private void onBluetooth() {
-        if (!bluetoothAdapter.isEnabled()) {
-            bluetoothAdapter.enable();
-            Log.i("Log", "Bluetooth is Enabled");
-        }
-    }
 
-    private void offBluetooth() {
-        if (bluetoothAdapter.isEnabled()) {
-            bluetoothAdapter.disable();
-        }
-    }
-
-    private void makeDiscoverable() {
-        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-        startActivity(discoverableIntent);
-        Log.i("Log", "Discoverable ");
-    }
 
     private void getPairedDevices() {
            Set<BluetoothDevice> pairedDevice = bluetoothAdapter.getBondedDevices();
@@ -258,7 +240,8 @@ public class BtDevicesActivity extends Activity {
             //           connect(bdDevice);
             Boolean isBonded = false;
             //Intent i = getParentActivityIntent();
-            theIntent.putExtra("utName", bdDevice.getName());
+            theIntent.putExtra("chosenDevice", new UserConfiguration(bdDevice));
+//            theIntent.putExtra("chosenDevice", bdDevice);
             //  i.putExtra("location","location");
 
             //setResult(Activity.RESULT_OK, new Intent().putExtra("utName", s));

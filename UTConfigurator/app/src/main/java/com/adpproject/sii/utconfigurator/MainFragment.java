@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.adpproject.sii.utconfigurator.bluetooth.BlutoothTools;
+import com.adpproject.sii.utconfigurator.bluetooth.BluetoothTools;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -36,7 +36,7 @@ public class MainFragment extends Fragment {
     private Button goButton = null;
     private Button searchButton = null;
     private Handler handler = null;
-
+    private UserConfiguration theChosenDevice;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,9 +58,9 @@ public class MainFragment extends Fragment {
                 //(new Thread(new BluetoothThread("LeMessage", mSocket, mDevice, handler, myLabel))).start();
 
                 try {
-                    BlutoothTools.init();
-                    BlutoothTools.write("UT name:" + utNameText.getText() + "\nLocation :" + locationText.getText());
-//                    BlutoothTools.run();
+                    BluetoothTools.init(theChosenDevice.getBluetoothDevice());
+                    BluetoothTools.write("UT name:" + utNameText.getText() + "\nLocation :" + locationText.getText());
+//                    BluetoothTools.run();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (NoSuchMethodException e) {
@@ -149,10 +149,11 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            Log.d("selim", data.getStringExtra("utName"));
-            String name = data.getStringExtra("utName");
-            utNameText.setText(name);
-            locationText.setText("< location >");
+//            Log.d("selim", data.getStringExtra("utName"));
+            Bundle b = data.getExtras();
+            theChosenDevice = b.getParcelable("chosenDevice");
+            utNameText.setText(theChosenDevice.getBluetoothDevice().getName());
+            locationText.setText(theChosenDevice.getLocation());
             // do something with B's return values
         }
     }
