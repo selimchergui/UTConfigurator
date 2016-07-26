@@ -20,6 +20,7 @@ import android.widget.ListView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Created by mac on 21/06/16.
@@ -27,9 +28,9 @@ import java.util.ArrayList;
 public class BtDevicesActivity extends Activity {
 
     static HandleSearch handleSearch;
-    //  ListView listViewPaired;
+    ListView listViewPaired;
     ListView listViewDetected;
-    //    ArrayList<String> arrayListpaired;
+    ArrayList<String> arrayListpaired;
     Button buttonSearch;
     ArrayAdapter<String> adapter, detectedAdapter;
     BluetoothDevice bdDevice;
@@ -86,7 +87,7 @@ public class BtDevicesActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bt_devices);
         listViewDetected = (ListView) findViewById(R.id.listViewDetected);
-//        listViewPaired = (ListView) findViewById(R.id.listViewPaired);
+        //listViewPaired = (ListView) findViewById(R.id.listViewPaired);
         buttonSearch = (Button) findViewById(R.id.refresh_btn);
 //        buttonOn = (Button) findViewById(R.id.buttonOn);
 //        buttonDesc = (Button) findViewById(R.id.buttonDesc);
@@ -102,7 +103,7 @@ public class BtDevicesActivity extends Activity {
          * the above declaration is just for getting the paired bluetooth devices;
          * this helps in the removing the bond between paired devices.
          */
-//        listItemClickedonPaired = new ListItemClickedonPaired();
+        //       listItemClickedonPaired = new ListItemClickedonPaired();
         arrayListBluetoothDevices = new ArrayList<BluetoothDevice>();
 //        adapter= new ArrayAdapter<String>(BtDevicesActivity.this, android.R.layout.simple_list_item_1, arrayListpaired);
         detectedAdapter = new ArrayAdapter<String>(BtDevicesActivity.this, R.layout.bt_list_item);
@@ -148,7 +149,7 @@ public class BtDevicesActivity extends Activity {
          }
 
          */
-    /*private void callThread() {
+    private void callThread() {
         new Thread(){
             public void run() {
                 Boolean isBonded = false;
@@ -166,7 +167,7 @@ public class BtDevicesActivity extends Activity {
                 Log.i("Log", "The bond is created: "+isBonded);
             }
         }.start();
-    }*/
+    }
     private Boolean connect(BluetoothDevice bdDevice) {
         Boolean bool = false;
         try {
@@ -228,7 +229,7 @@ public class BtDevicesActivity extends Activity {
         Log.i("Log", "Discoverable ");
     }
 
-    /*   private void getPairedDevices() {
+    private void getPairedDevices() {
            Set<BluetoothDevice> pairedDevice = bluetoothAdapter.getBondedDevices();
            if(pairedDevice.size()>0)
            {
@@ -241,47 +242,49 @@ public class BtDevicesActivity extends Activity {
            adapter.notifyDataSetChanged();
        }
 
-   */
+
     class ListItemClicked implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             // TODO Auto-generated method stub
             bdDevice = arrayListBluetoothDevices.get(position);
-            //bdClass = arrayListBluetoothDevices.get(position);
+//            bdClass = arrayListBluetoothDevices.get(position);
             Log.i("Log", "The device : " + bdDevice.toString());
             //
             // here below we can do pairing without calling the callthread(), we can directly call the
             // connect(). but for the safer side we must usethe threading object.
             //
-            //callThread();
-            connect(bdDevice);
+//            callThread();
+            //           connect(bdDevice);
             Boolean isBonded = false;
-            String s = bdDevice.getName();
             //Intent i = getParentActivityIntent();
-            theIntent.putExtra("utName", s);
+            theIntent.putExtra("utName", bdDevice.getName());
             //  i.putExtra("location","location");
 
             //setResult(Activity.RESULT_OK, new Intent().putExtra("utName", s));
             //myReceiver.setResultExtras("utName", s);
+
+
+            try {
+                isBonded = createBond(bdDevice);
+                if (isBonded) {
+                    arrayListpaired.add(bdDevice.getName() + "\n" + bdDevice.getAddress());
+                    adapter.notifyDataSetChanged();
+                    getPairedDevices();
+                    adapter.notifyDataSetChanged();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }//
+            connect(bdDevice);
+            Log.i("Log", "The bond is created: " + isBonded);
+
             setResult(RESULT_OK, theIntent);
 
             finish();
-
-//               try {
-//                   isBonded = createBond(bdDevice);
-//                   if(isBonded)
-//                   {
-//                       arrayListpaired.add(bdDevice.getName()+"\n"+bdDevice.getAddress());
-//                       adapter.notifyDataSetChanged();
-//                       getPairedDevices();
-//                       adapter.notifyDataSetChanged();
-//                   }
-//               } catch (Exception e) {
-//                   e.printStackTrace();
-//               }//connect(bdDevice);
-//               Log.i("Log", "The bond is created: "+isBonded);
         }
     }
+
 
     class ButtonClicked implements View.OnClickListener {
         @Override
@@ -290,6 +293,7 @@ public class BtDevicesActivity extends Activity {
             startSearching();
         }
     }
+
 
     class HandleSearch extends Handler {
         @Override

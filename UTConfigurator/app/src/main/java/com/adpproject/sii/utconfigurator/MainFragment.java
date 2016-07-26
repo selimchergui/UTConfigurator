@@ -17,8 +17,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.adpproject.sii.utconfigurator.bluetooth.BluetoothThread;
+import com.adpproject.sii.utconfigurator.bluetooth.BlutoothTools;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 /**
@@ -53,7 +55,22 @@ public class MainFragment extends Fragment {
         goButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                (new Thread(new BluetoothThread("LeMessage", mSocket, mDevice, handler, myLabel))).start();
+                //(new Thread(new BluetoothThread("LeMessage", mSocket, mDevice, handler, myLabel))).start();
+
+                try {
+                    BlutoothTools.init();
+                    BlutoothTools.write("UT name:" + utNameText.getText() + "\nLocation :" + locationText.getText());
+//                    BlutoothTools.run();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+
 
                 Toast.makeText(getActivity(), "Pushed configuration" + "\nUT Name :" + utNameText.getText().toString() + "\nLocation :" + locationText.getText().toString(), Toast.LENGTH_SHORT).show();
             }
