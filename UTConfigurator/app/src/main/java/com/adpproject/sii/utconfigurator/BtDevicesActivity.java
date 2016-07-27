@@ -52,13 +52,6 @@ public class BtDevicesActivity extends Activity {
 
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                try {
-                    //device.getClass().getMethod("setPairingConfirmation", boolean.class).invoke(device, true);
-                    //device.getClass().getMethod("cancelPairingUserInput", boolean.class).invoke(device);
-                } catch (Exception e) {
-                    Log.i("Log", " - Inside  the  exception: ");
-                    e.printStackTrace();
-                }
 
                 if (arrayListBluetoothDevices.size() < 1) // this checks if the size of bluetooth device is 0,then add the
                 {                                           // device to the arraylist.
@@ -87,12 +80,7 @@ public class BtDevicesActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bt_devices);
         listViewDetected = (ListView) findViewById(R.id.listViewDetected);
-        //listViewPaired = (ListView) findViewById(R.id.listViewPaired);
         buttonSearch = (Button) findViewById(R.id.refresh_btn);
-//        buttonOn = (Button) findViewById(R.id.buttonOn);
-//        buttonDesc = (Button) findViewById(R.id.buttonDesc);
-//        buttonOff = (Button) findViewById(R.id.buttonOff);
-//        arrayListpaired = new ArrayList<String>();
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         clicked = new ButtonClicked();
         handleSearch = new HandleSearch();
@@ -103,52 +91,22 @@ public class BtDevicesActivity extends Activity {
          * the above declaration is just for getting the paired bluetooth devices;
          * this helps in the removing the bond between paired devices.
          */
-        //       listItemClickedonPaired = new ListItemClickedonPaired();
         arrayListBluetoothDevices = new ArrayList<BluetoothDevice>();
-//        adapter= new ArrayAdapter<String>(BtDevicesActivity.this, android.R.layout.simple_list_item_1, arrayListpaired);
         detectedAdapter = new ArrayAdapter<String>(BtDevicesActivity.this, R.layout.bt_list_item);
         listViewDetected.setAdapter(detectedAdapter);
         listItemClicked = new ListItemClicked();
         detectedAdapter.notifyDataSetChanged();
-//        listViewPaired.setAdapter(adapter);
     }
 
     @Override
     protected void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
-//        getPairedDevices();
-//        buttonOn.setOnClickListener(clicked);
         buttonSearch.setOnClickListener(clicked);
-//        buttonDesc.setOnClickListener(clicked);
-//        buttonOff.setOnClickListener(clicked);
         listViewDetected.setOnItemClickListener(listItemClicked);
-//      listViewPaired.setOnItemClickListener(listItemClickedonPaired);
+
     }
 
-    /*     class ListItemClickedonPaired implements AdapterView.OnItemClickListener
-         {
-             @Override
-             public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
-                 bdDevice = arrayListPairedBluetoothDevices.get(position);
-                 try {
-                     Boolean removeBonding = removeBond(bdDevice);
-                     if(removeBonding)
-                     {
-                         arrayListpaired.remove(position);
-                         adapter.notifyDataSetChanged();
-                     }
-
-
-                     Log.i("Log", "Removed"+removeBonding);
-                 } catch (Exception e) {
-                     // TODO Auto-generated catch block
-                     e.printStackTrace();
-                 }
-             }
-         }
-
-         */
     private void callThread() {
         new Thread(){
             public void run() {
@@ -232,21 +190,8 @@ public class BtDevicesActivity extends Activity {
             bdDevice = arrayListBluetoothDevices.get(position);
 //            bdClass = arrayListBluetoothDevices.get(position);
             Log.i("Log", "The device : " + bdDevice.toString());
-            //
-            // here below we can do pairing without calling the callthread(), we can directly call the
-            // connect(). but for the safer side we must usethe threading object.
-            //
-//            callThread();
-            //           connect(bdDevice);
             Boolean isBonded = false;
-            //Intent i = getParentActivityIntent();
             theIntent.putExtra("chosenDevice", new UserConfiguration(bdDevice));
-//            theIntent.putExtra("chosenDevice", bdDevice);
-            //  i.putExtra("location","location");
-
-            //setResult(Activity.RESULT_OK, new Intent().putExtra("utName", s));
-            //myReceiver.setResultExtras("utName", s);
-
 
             try {
                 isBonded = createBond(bdDevice);
@@ -258,8 +203,9 @@ public class BtDevicesActivity extends Activity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }//
-            connect(bdDevice);
+            }
+
+            //      connect(bdDevice);
             Log.i("Log", "The bond is created: " + isBonded);
 
             setResult(RESULT_OK, theIntent);

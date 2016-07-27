@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,10 +27,10 @@ import java.util.Set;
  */
 public class MainFragment extends Fragment {
 
+    private static boolean firstCnx = true;
     BluetoothDevice mDevice = null;
     private EditText utNameText;
     private EditText locationText;
-    private BluetoothSocket mSocket;
     private TextView myLabel = null;
     private Button goButton = null;
     private Button searchButton = null;
@@ -58,16 +57,21 @@ public class MainFragment extends Fragment {
                 //(new Thread(new BluetoothThread("LeMessage", mSocket, mDevice, handler, myLabel))).start();
 
                 try {
-                    BluetoothTools.init(theChosenDevice.getBluetoothDevice());
+                    if (firstCnx) {
+                        BluetoothTools.init(theChosenDevice.getBluetoothDevice());
+                        firstCnx = false;
+                    }
+
                     BluetoothTools.write("UT name:" + utNameText.getText() + "\nLocation :" + locationText.getText());
+                    Log.e("Write", "write on strem !!");
 //                    BluetoothTools.run();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
@@ -82,7 +86,24 @@ public class MainFragment extends Fragment {
 
                 // Activity btDevicesActivity=new BtDevicesActivity();
                 Intent btActivity = new Intent(getActivity(), BtDevicesActivity.class);
+
+
                 //btDevicesActivity.setArguments(getActivity().getIntent().getExtras());
+                if (!firstCnx) {
+                    try {
+                        BluetoothTools.disconnect(theChosenDevice.getBluetoothDevice());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } finally {
+                        firstCnx = true;
+                    }
+                }
                 startActivityForResult(btActivity, 113);
 
 
@@ -97,12 +118,6 @@ public class MainFragment extends Fragment {
         //check to see if there is BT on the Android device at all
 
 
-//        IntentFilter filter = new IntentFilter();
-//        filter.addAction(BluetoothDevice.ACTION_FOUND);
-//        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-//        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-//        getActivity().registerReceiver(mReceiver, filter);
-//        mBluetoothAdapter.startDiscovery();
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
@@ -149,12 +164,10 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-//            Log.d("selim", data.getStringExtra("utName"));
             Bundle b = data.getExtras();
             theChosenDevice = b.getParcelable("chosenDevice");
             utNameText.setText(theChosenDevice.getBluetoothDevice().getName());
             locationText.setText(theChosenDevice.getLocation());
-            // do something with B's return values
         }
     }
 

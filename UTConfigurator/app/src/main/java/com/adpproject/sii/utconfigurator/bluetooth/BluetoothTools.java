@@ -28,7 +28,6 @@ public class BluetoothTools {
             BluetoothSocket socket = (BluetoothSocket) method.invoke(chosenDevice, 1);
 
             socket.connect();
-
             outputStream = socket.getOutputStream();
             //inStream = socket.getInputStream(); //at this stage we don't need to receive data from raspberry pi //Selim//
 
@@ -41,10 +40,18 @@ public class BluetoothTools {
 
     public static void write(String s) throws IOException {
         outputStream.write(s.getBytes());
+        outputStream.flush();
+    }
+
+    public static void disconnect(BluetoothDevice chosenDevice) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = chosenDevice.getClass().getMethod("createRfcommSocket", int.class);
+        BluetoothSocket socket = (BluetoothSocket) method.invoke(chosenDevice, 1);
+
+        socket.close();
     }
 
 // run() is not used in this case //Selim//
-/*    public static void run() {
+public static void run() {
         final int BUFFER_SIZE = 1024;
         byte[] buffer = new byte[BUFFER_SIZE];
         int bytes = 0;
@@ -57,5 +64,5 @@ public class BluetoothTools {
                 e.printStackTrace();
             }
         }
-    }*/
+}
 }
